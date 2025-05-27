@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1083587242720",
+    "project_id": "routingmapsnoti",
+    "storage_bucket": "routingmapsnoti.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083587242720:android:c2ad10014d640b7816fe85",
+        "android_client_info": {
+          "package_name": "com.routingmaps.notifications"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHZ2lDo0G8krVYfZF36j_UcRiuvzLiziA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

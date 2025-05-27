@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Routing Maps</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" mode="ios">
+  <div class="container">
+
+    <ion-label class="title">
+      <h1>Register</h1>
+    </ion-label>
+
+    <ion-item class="first-input">
+      <ion-label position="floating">FirstName</ion-label>
+      <ion-input type="text" [(ngModel)]="user.firstName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">LastName</ion-label>
+      <ion-input type="text" [(ngModel)]="user.lastName"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="user.email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="user.password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Repeat password</ion-label>
+      <ion-input type="password" [(ngModel)]="passwordCheck"></ion-input>
+    </ion-item>
+
+    <div class="button-container">
+      <ion-button expand="full" shape="round" (click)="register()">Submit</ion-button>
+    </div>
+
+    <div class="footer">
+      <p>Do you already have an account? <a routerLink="/login">Login</a></p>
+    </div>
+  </div>
+</ion-content>

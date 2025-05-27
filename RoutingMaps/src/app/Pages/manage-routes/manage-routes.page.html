@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <a href="driver">
+        <ion-button fill="clear" slot="start">
+          <ion-icon slot="icon-only" size="large" name="bus"></ion-icon>
+        </ion-button>
+      </a>
+    </ion-buttons>
+
+    <ion-title>Manage Routes</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" slot="end" (click)="logout()">
+        <ion-icon slot="icon-only" size="large" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" mode="ios">
+  <div class="container">
+    <ion-buttons>
+      <ion-button fill="solid" (click)="this.isAddRouteModalOpen = true" color="success">
+        Create route <ion-icon slot="start" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-modal class="add-route-modal" [isOpen]="isAddRouteModalOpen" (willDismiss)="this.isAddRouteModalOpen = false">
+      <ng-template>
+        <app-add-route (successAddRoute)="getAllRoutes()"></app-add-route>
+      </ng-template>
+    </ion-modal>
+
+    <ion-modal [isOpen]="isRouteModalOpen" (willDismiss)="this.isRouteModalOpen = false">
+      <ng-template>
+        <app-route [routeId]="selectedRouteId" (successUpdateRoute)="getAllRoutes()"></app-route>
+      </ng-template>
+    </ion-modal>
+
+    <ion-title *ngIf="routes.length == 0">No routes found</ion-title>
+
+    <ion-card *ngFor="let route of routes">
+      <ion-card-header color="primary">
+        <ion-card-title>Route n° {{route.id}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="card-content">
+        <ion-card-title>
+          {{tools.getDate(route.drivingDate)}} | {{tools.getTime(route.drivingDate)}}
+          <br>
+          <ion-buttons>
+            <ion-button (click)="viewRoute(route)" fill="clear" class="route-button">
+              <ion-icon size="large" slot="icon-only" name="eye"></ion-icon>
+            </ion-button>
+            <ion-button (click)="deleteRoute(route)" fill="clear" class="route-button">
+              <ion-icon size="large" color="danger" slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+
+        </ion-card-title>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

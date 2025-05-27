@@ -1,0 +1,7 @@
+ion-datetime {
+    --background: none;
+}
+
+ion-datetime::part(wheel-item) {
+    --background: none;
+}

@@ -1,0 +1,28 @@
+ion-card {
+    text-align: center;
+
+    .card-content {
+        margin-top: 2.5%;
+
+        ion-buttons {
+            justify-content: space-evenly;
+        }
+    }
+}
+
+ion-buttons {
+    justify-content: center;
+    padding-top: 2.5vh;
+}
+
+.add-route-modal {
+    --height: auto;
+    align-items: end;
+}
+
+@media (min-width: 750px) {
+    .container {
+        max-width: 60%;
+        margin-left: 20%;
+    }
+}

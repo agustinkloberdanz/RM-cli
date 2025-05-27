@@ -1,0 +1,102 @@
+<ion-header [translucent]="true" mode="ios">
+  <ion-toolbar>
+    <ion-title>Route n°{{route.id}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" mode="ios">
+  <ion-label class="title">
+    <h1>{{tools.getDate(route.drivingDate)}} | {{tools.getTime(route.drivingDate)}}</h1>
+  </ion-label>
+
+  <ion-toolbar color="none" *ngIf="!isRouteStarted">
+    <ion-buttons slot="start">
+      <ion-button fill="solid" [disabled]="isReorderDisabled && route.locations.length > 0" color="success"
+        (click)="addLocation()">
+        <ion-icon name="add"></ion-icon>Address
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button fill="solid" (click)="reorder()" [disabled]="route.locations.length == 0"
+        [color]="isReorderDisabled ? 'primary' : 'medium'" slot="end">Reorder<ion-icon
+          name="chevron-expand-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-list>
+    <ion-item *ngIf="isAddLocationInput">
+      <ion-input [(ngModel)]="addLocationStreet" errorText="*" placeholder="Street"></ion-input>
+
+      <ion-input [(ngModel)]="addLocationNumber" errorText="*" placeholder="Number" type="number"></ion-input>
+
+      <ion-button color="none" size="default" (click)="setAddressToAddLocation()">
+        <ion-icon slot="icon-only" color="success" name="send"></ion-icon>
+      </ion-button>
+      <ion-button color="none" size="default" (click)="cancelAddLocation()">
+        <ion-icon slot="icon-only" color="danger" name="close"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <ion-reorder-group [disabled]="isReorderDisabled" (ionItemReorder)="handleReorder($any($event))">
+
+      <ion-item *ngFor="let location of route.locations">
+        <p>{{location.order}}:</p>
+        <ion-label [color]="location.isNotified ? 'success' : 'ligth'" class="location-label">
+          {{location.address}} - {{location.userEmail}}
+        </ion-label>
+        <ion-button fill="clear" *ngIf="!isReorderDisabled" size="default" (click)="deleteLocation(location.id)">
+          <ion-icon slot="icon-only" color="danger" name="trash"></ion-icon>
+        </ion-button>
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+    </ion-reorder-group>
+
+  </ion-list>
+
+  <div class="submit-button">
+    <ion-button [disabled]="!isReorderDisabled || route.locations.length == 0" (click)="confirmModifyRoute()">Confirm
+      changes</ion-button>
+  </div>
+
+
+  <ion-modal [isOpen]="isSelectEmailModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>
+            <h3>Select the user email to notify</h3>
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button color="light" (click)="closeSelectEmailModal()">Cancel</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+
+        <ion-toolbar>
+          <ion-searchbar (ionInput)="handleSearchInput()" [(ngModel)]="query" type="email" animated="true"
+            placeholder="Filtrar email"></ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list>
+          <ion-item>
+            <ion-checkbox (ionChange)="setEmailToAddLocation('')">No Email</ion-checkbox>
+          </ion-item>
+          <ion-item *ngFor="let user of filtredUsers">
+            <ion-checkbox (ionChange)="setEmailToAddLocation(user.email)">
+              {{ user.email }}
+            </ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

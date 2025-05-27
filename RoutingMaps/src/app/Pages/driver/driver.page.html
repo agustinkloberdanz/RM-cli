@@ -1,0 +1,101 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <a href="manage-routes">
+        <ion-button>
+          <ion-icon size="large" name="return-up-back"></ion-icon>
+        </ion-button>
+      </a>
+    </ion-buttons>
+
+    <div slot="secondary" [hidden]="isSelectHidden">
+      <ion-select #select value="" fill="outline" (ionChange)="handleRouteChange($event)">
+        <ion-select-option value="">Select route</ion-select-option>
+        <ion-select-option *ngFor="let route of routes" value="{{route.id}}">
+          {{tools.getDate(route.drivingDate)}} - {{tools.getTime(route.drivingDate)}}
+        </ion-select-option>
+      </ion-select>
+    </div>
+
+    <div [hidden]="isSelectHidden" slot="end">
+      <ion-button (click)="openViewRouteModal()" fill="clear" color="primary">
+        <ion-icon size="large" name="analytics"></ion-icon>
+      </ion-button>
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" mode="ios">
+
+  <div class="route-info-container">
+    @if (notifyLocations.length === 0) {
+    <ion-button [hidden]="!isSelectHidden" (click)="openSelect()" class="select-button">Select route</ion-button>
+    } @else {
+    <div class="map">
+      <app-maps [hidden]="isSelectHidden" [fromAddress]="notifyLocations[0]"
+        [toAddress]="notifyLocations[1]"></app-maps>
+    </div>
+    }
+
+    <div class="locations" *ngIf="notifyLocations.length != 0">
+      <ion-progress-bar [value]="progress" color="primary"></ion-progress-bar>
+
+      <ion-card>
+        <ion-label class="label">Origin</ion-label>
+        <ion-text class="label" style="margin: 0;">
+          A : {{notifyLocations[0].address}}
+        </ion-text>
+
+        <ion-icon size="large" name="arrow-down-outline"></ion-icon>
+        <br>
+
+        @if(notifyLocations[1] != null) {
+        <ion-label class="label">Destination</ion-label>
+        <ion-text class="label" style="margin: 0;">
+          <h3>B : {{notifyLocations[1].address}}</h3>
+        </ion-text>
+        }
+        @else {
+        <ion-text class="label">
+          <h3>Final of the route</h3>
+        </ion-text>
+        }
+      </ion-card>
+    </div>
+  </div>
+
+  <div class="button-container">
+    <ion-button (click)="handleClick()" [color]="buttonColor" shape="round">{{buttonText}}</ion-button>
+  </div>
+
+  <ion-modal [isOpen]="isViewRouteModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="medium">
+          <ion-title>View route</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeViewRouteModal()">
+              <ion-icon slot="icon-only" color="light" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list>
+          @for (location of route.locations; track location) {
+          @if (location.order != 0) {
+          <ion-item>
+            <ion-label>{{location.order}}- {{location.address}}</ion-label>
+            <ion-icon color="{{location.isNotified ? 'success' : 'warning'}}"
+              name="{{location.isNotified ? 'checkmark' : 'hourglass-outline'}}"></ion-icon>
+          </ion-item>
+          }}
+        </ion-list>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

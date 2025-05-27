@@ -1,0 +1,17 @@
+<ion-header [translucent]="true" mode="ios">
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+        <ion-button (click)="closeModal()">
+          Close
+        </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="addRoute()">Create</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-datetime [minuteValues]="[00, 15, 30, 45]" (ionChange)="handleDatetimeChange($event)" [min]="addRouteDateString"
+  [value]="addRouteDateString" color="primary" size="auto" presentation="date-time" [preferWheel]="true"
+  hourCycle="h23">
+</ion-datetime>

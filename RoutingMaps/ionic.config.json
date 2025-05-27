@@ -1,0 +1,7 @@
+{
+  "name": "RoutingMaps",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,42 @@
+.route-info-container {
+    height: 70%;
+    width: 100%;
+
+    .select-button {
+        margin-top: 25%;
+        width: 75%;
+        margin-left: 12.5%;
+        text-align: center;
+    }
+
+    .map {
+        height: 50%;
+        margin-bottom: 0;
+        width: 95%;
+        text-align: center;
+    }
+
+    .locations {
+        height: 50%;
+        width: 90%;
+        margin-left: 5%;
+        text-align: center;
+        margin-top: 0;
+    }
+}
+
+.button-container {
+    text-align: center;
+    height: 30%;
+    width: 100%;
+
+    .button {
+        height: 75%;
+        width: 75%;
+        justify-items: end;
+    }
+}
+
+.label {
+    display: block;
+}
