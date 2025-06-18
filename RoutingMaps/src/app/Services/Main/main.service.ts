@@ -9,7 +9,7 @@ export class MainService {
   constructor(public http: HttpClient) { }
 
   // public API_URL = 'https://localhost:7039/api/';
-  public API_URL = 'https://p4bnc6db-7039.brs.devtunnels.ms/api/';
+  public API_URL = 'http://routingmaps.somee.com/api/';
 
   createHeaders() {
     const token = localStorage.getItem('Token');

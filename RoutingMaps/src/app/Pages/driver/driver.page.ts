@@ -118,59 +118,114 @@ export class DriverPage {
           message: `🚌${this.notifyLocations[1].userEmail}: The bus is arriving!\nAddress: ${this.notifyLocations[1].address}.\nDriver's name: ${this.driverName}.`
         }
 
-        if (confirm(`${this.notifyLocations[1].address}: I am arriving!`)) {
-          this.buttonText = 'I am at door!'
-          this.buttonColor = 'success'
-          this.notificationsService.SendNotification(arriving).subscribe(response => {
-            console.log(arriving.userEmail + ': Notification approaching ' + response.message)
-          })
+        const buttons = [
+          {
+            text: 'Send',
+            handler: async () => {
+              this.buttonText = 'I am at door!'
+              this.buttonColor = 'success'
+              // Notifies the CURRENT user that the bus is approaching
+              this.notificationsService.SendNotification(arriving).subscribe(
+                response => {
+                  console.log(arriving.userEmail + ': Notification approaching ' + response.message)
+                },
+                async (err) => {
+                  if (err.status === 401) {
+                    this.router.navigateByUrl('login')
+                    await this.tools.presentToast('Expired session')
+                  } else {
+                    await this.tools.presentToast('Error while connecting to the server')
+                  }
+                })
+              await this.tools.presentToast('User notified')
+            }
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel'
+          }
+        ]
 
-          await this.tools.presentToast('User notified')
-        }
+        await this.tools.presentAlert('Routing Maps', `${this.notifyLocations[1].address}: I am arriving!`, buttons)
       } else if (this.buttonText === 'I am at door!') {
         const atDoor: NotificationDTO = {
           userEmail: this.notifyLocations[1].userEmail,
           message: `🚌${this.notifyLocations[1].userEmail}: The bus is at door!\nAddress: ${this.notifyLocations[1].address}.\nDriver's name: ${this.driverName}.`
         }
 
-        if (confirm(`${this.notifyLocations[1].address}: I am at door!`)) {
-          this.buttonText = 'I am arriving!'
-          this.buttonColor = 'primary'
+        const buttons = [
+          {
+            text: 'Send',
+            handler: async () => {
+              this.buttonText = 'I am arriving!'
+              this.buttonColor = 'primary'
 
-          this.notificationsService.SendNotification(atDoor).subscribe(response => {
-            console.log(atDoor.userEmail + ': Notification at door ' + response.message)
-          })
+              // Notifies the CURRENT user that the bus is at door
+              this.notificationsService.SendNotification(atDoor).subscribe(
+                response => {
+                  console.log(atDoor.userEmail + ': Notification at door ' + response.message)
+                },
+                async (err) => {
+                  if (err.status === 401) {
+                    this.router.navigateByUrl('login')
+                    await this.tools.presentToast('Expired session')
+                  } else {
+                    await this.tools.presentToast('Error while connecting to the server')
+                  }
+                }
+              )
 
-          if (this.notifyLocations[2]) {
-            const onTheWay: NotificationDTO = {
-              userEmail: this.notifyLocations[2].userEmail,
-              message: `🚌${this.notifyLocations[2].userEmail}: The bus is comming!\nAddress: ${this.notifyLocations[2].address}.\nDriver's name: ${this.driverName}.`
+              // If it exists, notifies the NEXT user that the bus is comming
+              if (this.notifyLocations[2]) {
+                const onTheWay: NotificationDTO = {
+                  userEmail: this.notifyLocations[2].userEmail,
+                  message: `🚌${this.notifyLocations[2].userEmail}: The bus is comming!\nAddress: ${this.notifyLocations[2].address}.\nDriver's name: ${this.driverName}.`
+                }
+
+                this.notificationsService.SendNotification(onTheWay).subscribe(
+                  response => {
+                    console.log(onTheWay.userEmail + ': Notification on the way ' + response.message)
+                  },
+                  async (err) => {
+                    if (err.status === 401) {
+                      this.router.navigateByUrl('login')
+                      await this.tools.presentToast('Expired session')
+                    } else {
+                      await this.tools.presentToast('Error while connecting to the server')
+                    }
+                  }
+                )
+              }
+
+              // Set the CURRENT location as notified
+              this.routesService.SetNotifiedLocation(this.notifyLocations[1].id).subscribe(
+                response => {
+                  if (response.isSuccess) {
+                    this.route.locations.forEach(location => { if (location.id == this.notifyLocations[1].id) location.isNotified = true })
+                    this.routes.forEach(route => { if (route.id == this.route.id) route.locations.forEach(location => { if (location.id == this.notifyLocations[1].id) location.isNotified = true }) })
+                  }
+                  this.nextLocation()
+                },
+                async (err) => {
+                  if (err.status === 401) {
+                    this.router.navigateByUrl('login')
+                    await this.tools.presentToast('Expired session')
+                  } else {
+                    await this.tools.presentToast('Error while connecting to the server')
+                  }
+                }
+              )
+
+              await this.tools.presentToast('User notified')
             }
-
-            this.notificationsService.SendNotification(onTheWay).subscribe(response => {
-              console.log(onTheWay.userEmail + ': Notification on the way ' + response.message)
-            })
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel'
           }
+        ]
 
-          this.routesService.SetNotifiedLocation(this.notifyLocations[1].id).subscribe({
-            next: response => {
-              if (response.isSuccess) {
-                this.route.locations.forEach(location => { if (location.id == this.notifyLocations[1].id) location.isNotified = true })
-                this.routes.forEach(route => { if (route.id == this.route.id) route.locations.forEach(location => { if (location.id == this.notifyLocations[1].id) location.isNotified = true }) })
-              }
-              this.nextLocation()
-            },
-            error: async (err) => {
-              if (err.status === 401) {
-                this.router.navigateByUrl('login')
-                await this.tools.presentToast('Expired session')
-              } else {
-                await this.tools.presentToast('Error while connecting to the server')
-              }
-            }
-          })
-          await this.tools.presentToast('User notified')
-        }
+        await this.tools.presentAlert('Routing Maps', `${this.notifyLocations[1].address}: I am at door!`, buttons)
       }
     }
   }
@@ -218,6 +273,8 @@ export class DriverPage {
   startRoute() {
     if (!this.checkIsDrivingFinished()) {
       if (!this.checkIsDrivingStarted()) {
+        // Add the origin of the route
+        // For example, the garage where buses are parked
         const origin: LocationDTO = {
           id: 0,
           address: 'San Luis, 3853',

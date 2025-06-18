@@ -8,7 +8,9 @@
       </a>
     </ion-buttons>
 
-    <ion-title>Manage Routes</ion-title>
+    <ion-title class="title">
+      <h2>Manage Routes</h2>
+    </ion-title>
 
     <ion-buttons slot="end">
       <ion-button fill="clear" slot="end" (click)="logout()">
@@ -18,7 +20,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" mode="ios">
+<ion-content [fullscreen]="true">
   <div class="container">
     <ion-buttons>
       <ion-button fill="solid" (click)="this.isAddRouteModalOpen = true" color="success">
@@ -38,7 +40,9 @@
       </ng-template>
     </ion-modal>
 
-    <ion-title *ngIf="routes.length == 0">No routes found</ion-title>
+    <ion-title class="title" *ngIf="routes.length == 0">
+      <h2>No routes were found</h2>
+    </ion-title>
 
     <ion-card *ngFor="let route of routes">
       <ion-card-header color="primary">
